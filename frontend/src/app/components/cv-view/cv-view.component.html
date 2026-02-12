@@ -1,0 +1,121 @@
+<div class="cv-view-container" *ngIf="!loading && cv">
+  <div class="action-buttons no-print">
+    <button class="btn btn-primary" (click)="printCV()">🖨️ Imprimer / PDF</button>
+     <button class="btn btn-warning" (click)="editCV()">✏️ Modifier</button>
+    <button class="btn btn-secondary" routerLink="/">← Retour</button>
+  </div>
+
+  <div class="cv-document">
+    <header class="cv-header">
+      <div class="cv-photo" *ngIf="cv.photoUrl">
+        <img [src]="cv.photoUrl" alt="Photo">
+      </div>
+      <div class="cv-identity">
+        <h1>{{ cv.prenom }} {{ cv.nom }}</h1>
+        <h2 *ngIf="cv.titreCV">{{ cv.titreCV }}</h2>
+        <div class="contact-info">
+          <div class="contact-item">
+            <span class="icon">📧</span>
+            <span>{{ cv.email }}</span>
+          </div>
+          <div class="contact-item">
+            <span class="icon">📱</span>
+            <span>{{ cv.telephone }}</span>
+          </div>
+          <div class="contact-item" *ngIf="cv.adresse">
+            <span class="icon">📍</span>
+            <span>{{ cv.adresse }}</span>
+          </div>
+          <div class="contact-item" *ngIf="cv.dateNaissance">
+            <span class="icon">🎂</span>
+            <span>{{ calculateAge(cv.dateNaissance) }} ans</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="cv-section" *ngIf="cv.formations && cv.formations.length > 0">
+      <h3 class="section-title">🎓 FORMATIONS</h3>
+      <div class="section-content">
+        <div class="timeline-item" *ngFor="let formation of cv.formations">
+          <div class="timeline-period">
+            {{ formation.anneeDebut }} - 
+            {{ formation.enCours ? 'En cours' : (formation.anneeFin || 'Présent') }}
+          </div>
+          <div class="timeline-content">
+            <h4>{{ formation.intitule }}</h4>
+            <p class="institution">{{ formation.etablissement }}</p>
+            <p class="description" *ngIf="formation.description">{{ formation.description }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cv-section" *ngIf="cv.experiences && cv.experiences.length > 0">
+      <h3 class="section-title">💼 EXPÉRIENCES PROFESSIONNELLES</h3>
+      <div class="section-content">
+        <div class="timeline-item" *ngFor="let experience of cv.experiences">
+          <div class="timeline-period">
+            {{ formatDate(experience.dateDebut) }} - 
+            {{ experience.enCours ? 'En cours' : formatDate(experience.dateFin) }}
+          </div>
+          <div class="timeline-content">
+            <h4>{{ experience.poste }}</h4>
+            <p class="institution">{{ experience.entreprise }}{{ experience.lieu ? ' - ' + experience.lieu : '' }}</p>
+            <p class="description" *ngIf="experience.missions" style="white-space: pre-line;">{{ experience.missions }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cv-section" *ngIf="cv.stages && cv.stages.length > 0">
+      <h3 class="section-title">🧪 STAGES</h3>
+      <div class="section-content">
+        <div class="timeline-item" *ngFor="let stage of cv.stages">
+          <div class="timeline-period">
+            {{ formatDate(stage.dateDebut) }} - {{ formatDate(stage.dateFin) }}
+          </div>
+          <div class="timeline-content">
+            <h4>{{ stage.intitule }}</h4>
+            <p class="institution">{{ stage.entreprise }}{{ stage.lieu ? ' - ' + stage.lieu : '' }}</p>
+            <p class="description" *ngIf="stage.description">{{ stage.description }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="cv-bottom-sections">
+      <section class="cv-section half-width" *ngIf="cv.langues && cv.langues.length > 0">
+        <h3 class="section-title">🌍 LANGUES</h3>
+        <div class="section-content">
+          <div class="skill-item" *ngFor="let langue of cv.langues">
+            <span class="skill-name">{{ langue.nom }}</span>
+            <span class="skill-level">{{ langue.niveau }}</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="cv-section half-width" *ngIf="cv.competences && cv.competences.length > 0">
+        <h3 class="section-title">🛠 COMPÉTENCES</h3>
+        <div class="section-content">
+          <div class="skill-item" *ngFor="let competence of cv.competences">
+            <span class="skill-name">{{ competence.nom }}</span>
+            <span class="skill-level" *ngIf="competence.niveau">
+              <span class="star" *ngFor="let star of [1,2,3,4,5]" [class.filled]="star <= (competence.niveau || 0)">★</span>
+            </span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div class="loading" *ngIf="loading">
+  <div class="spinner"></div>
+  <p>Chargement du CV...</p>
+</div>
+
+<div class="error" *ngIf="error">
+  <p>{{ error }}</p>
+  <button class="btn btn-primary" routerLink="/">Retour à l'accueil</button>
+</div>

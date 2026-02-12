@@ -1,0 +1,55 @@
+<div class="cv-list-container">
+  <div class="header">
+    <h2>📋 Mes CV</h2>
+    <button class="btn btn-primary" (click)="createNewCV()">+ Créer un nouveau CV</button>
+  </div>
+
+  <div class="cv-grid" *ngIf="!loading && cvs.length > 0">
+    <div class="cv-card" *ngFor="let cv of cvs">
+      <div class="cv-card-header">
+        <div class="cv-photo" *ngIf="cv.photoUrl">
+          <img [src]="cv.photoUrl" alt="Photo">
+        </div>
+        <div class="cv-photo placeholder" *ngIf="!cv.photoUrl">
+          <span>{{ cv.prenom.charAt(0) }}{{ cv.nom.charAt(0) }}</span>
+        </div>
+      </div>
+      
+      <div class="cv-card-body">
+        <h3>{{ cv.prenom }} {{ cv.nom }}</h3>
+        <p class="cv-title" *ngIf="cv.titreCV">{{ cv.titreCV }}</p>
+        <p class="cv-email">{{ cv.email }}</p>
+        
+        <div class="cv-stats">
+          <span class="stat-item" *ngIf="cv.formations">
+            🎓 {{ cv.formations.length }} formation(s)
+          </span>
+          <span class="stat-item" *ngIf="cv.experiences">
+            💼 {{ cv.experiences.length }} expérience(s)
+          </span>
+          <span class="stat-item" *ngIf="cv.competences">
+            🛠 {{ cv.competences.length }} compétence(s)
+          </span>
+        </div>
+      </div>
+      
+    <div class="cv-card-actions">
+      <button class="btn btn-view" (click)="viewCV(cv.id)">👁️ Voir</button>
+      <button class="btn btn-edit" (click)="editCV(cv.id)">✏️ Modifier</button>
+      <button class="btn btn-delete" (click)="deleteCV(cv.id)">🗑️ Supprimer</button>
+    </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && cvs.length === 0">
+    <div class="empty-icon">📝</div>
+    <h3>Aucun CV trouvé</h3>
+    <p>Créez votre premier CV pour commencer</p>
+    <button class="btn btn-primary" (click)="createNewCV()">Créer mon premier CV</button>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Chargement...</p>
+  </div>
+</div>

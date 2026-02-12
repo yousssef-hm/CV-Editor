@@ -1,0 +1,359 @@
+<div class="cv-form-container">
+  <div class="progress-bar">
+    <div class="progress-step" [class.active]="currentStep >= 1" (click)="goToStep(1)">
+      <span class="step-number">1</span>
+      <span class="step-label">Infos</span>
+    </div>
+    <div class="progress-step" [class.active]="currentStep >= 2" (click)="goToStep(2)">
+      <span class="step-number">2</span>
+      <span class="step-label">Formations</span>
+    </div>
+    <div class="progress-step" [class.active]="currentStep >= 3" (click)="goToStep(3)">
+      <span class="step-number">3</span>
+      <span class="step-label">Expériences</span>
+    </div>
+    <div class="progress-step" [class.active]="currentStep >= 4" (click)="goToStep(4)">
+      <span class="step-number">4</span>
+      <span class="step-label">Stages</span>
+    </div>
+    <div class="progress-step" [class.active]="currentStep >= 5" (click)="goToStep(5)">
+      <span class="step-number">5</span>
+      <span class="step-label">Langues</span>
+    </div>
+    <div class="progress-step" [class.active]="currentStep >= 6" (click)="goToStep(6)">
+      <span class="step-number">6</span>
+      <span class="step-label">Compétences</span>
+    </div>
+  </div>
+
+  <form [formGroup]="cvForm" (ngSubmit)="onSubmit()" class="cv-form">
+    
+    <div class="form-step" *ngIf="currentStep === 1">
+      <h2>🧍 Informations Personnelles</h2>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nom">Nom *</label>
+          <input type="text" id="nom" formControlName="nom" class="form-control" placeholder="DUPONT">
+        </div>
+        
+        <div class="form-group">
+          <label for="prenom">Prénom *</label>
+          <input type="text" id="prenom" formControlName="prenom" class="form-control" placeholder="Jean">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input type="email" id="email" formControlName="email" class="form-control" placeholder="jean.dupont@email.com">
+        </div>
+        
+        <div class="form-group">
+          <label for="telephone">Téléphone *</label>
+          <input type="tel" id="telephone" formControlName="telephone" class="form-control" placeholder="0612345678">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="adresse">Adresse</label>
+        <textarea id="adresse" formControlName="adresse" class="form-control" rows="2" placeholder="123 Rue de la Paix, 75000 Paris"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="dateNaissance">Date de naissance</label>
+          <input type="date" id="dateNaissance" formControlName="dateNaissance" class="form-control">
+        </div>
+        
+        <div class="form-group">
+          <label for="titreCV">Titre du CV</label>
+          <input type="text" id="titreCV" formControlName="titreCV" class="form-control" placeholder="Développeur Full Stack">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="photo">Photo de profil</label>
+        
+        <div class="photo-upload-container">
+          <!-- Prévisualisation de la photo -->
+          <div class="photo-preview" *ngIf="photoPreview">
+            <img [src]="photoPreview" alt="Aperçu de la photo">
+          </div>
+          
+          <!-- Bouton de sélection de fichier -->
+          <div class="file-input-wrapper">
+            <input 
+              type="file" 
+              id="photo" 
+              accept="image/*" 
+              (change)="onFileSelected($event)"
+              class="file-input"
+            >
+            <label for="photo" class="file-input-label">
+              📷 Choisir une photo
+            </label>
+          </div>
+          
+          <!-- Indicateur de chargement -->
+          <div class="upload-status" *ngIf="uploadingPhoto">
+            <div class="spinner-small"></div>
+            <span>Upload en cours...</span>
+          </div>
+          
+          <!-- Nom du fichier sélectionné -->
+          <p class="file-name" *ngIf="selectedFile && !uploadingPhoto">
+            Fichier sélectionné : {{ selectedFile.name }}
+          </p>
+        </div>
+        
+        <!-- Option alternative : URL -->
+        <div class="or-divider">
+          <span>OU</span>
+        </div>
+        
+        <label for="photoUrl">URL de la photo (optionnel)</label>
+        <input type="url" id="photoUrl" formControlName="photoUrl" class="form-control" placeholder="https://...">
+      </div>
+    </div>
+
+    <div class="form-step" *ngIf="currentStep === 2">
+      <h2>🎓 Formations</h2>
+      
+      <div formArrayName="formations">
+        <div *ngFor="let formation of formations.controls; let i = index" [formGroupName]="i" class="array-item">
+          <h3>Formation {{ i + 1 }}</h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Intitulé *</label>
+              <input type="text" formControlName="intitule" class="form-control" placeholder="Master Informatique">
+            </div>
+            
+            <div class="form-group">
+              <label>Établissement *</label>
+              <input type="text" formControlName="etablissement" class="form-control" placeholder="Université">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Année début *</label>
+              <input type="number" formControlName="anneeDebut" class="form-control" placeholder="2020">
+            </div>
+            
+            <div class="form-group">
+              <label>Année fin</label>
+              <input type="number" formControlName="anneeFin" class="form-control" placeholder="2022">
+            </div>
+            
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" formControlName="enCours">
+                En cours
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea formControlName="description" class="form-control" rows="3"></textarea>
+          </div>
+
+          <button type="button" class="btn btn-danger" (click)="removeFormation(i)">Supprimer</button>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-secondary" (click)="addFormation()">+ Ajouter une formation</button>
+    </div>
+
+    <div class="form-step" *ngIf="currentStep === 3">
+      <h2>💼 Expériences</h2>
+      
+      <div formArrayName="experiences">
+        <div *ngFor="let experience of experiences.controls; let i = index" [formGroupName]="i" class="array-item">
+          <h3>Expérience {{ i + 1 }}</h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Poste *</label>
+              <input type="text" formControlName="poste" class="form-control" placeholder="Développeur">
+            </div>
+            
+            <div class="form-group">
+              <label>Entreprise *</label>
+              <input type="text" formControlName="entreprise" class="form-control" placeholder="TechCorp">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Date début *</label>
+              <input type="date" formControlName="dateDebut" class="form-control">
+            </div>
+            
+            <div class="form-group">
+              <label>Date fin</label>
+              <input type="date" formControlName="dateFin" class="form-control">
+            </div>
+            
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" formControlName="enCours">
+                En cours
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Lieu</label>
+            <input type="text" formControlName="lieu" class="form-control" placeholder="Paris">
+          </div>
+
+          <div class="form-group">
+            <label>Missions</label>
+            <textarea formControlName="missions" class="form-control" rows="4"></textarea>
+          </div>
+
+          <button type="button" class="btn btn-danger" (click)="removeExperience(i)">Supprimer</button>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-secondary" (click)="addExperience()">+ Ajouter une expérience</button>
+    </div>
+
+    <div class="form-step" *ngIf="currentStep === 4">
+      <h2>🧪 Stages</h2>
+      
+      <div formArrayName="stages">
+        <div *ngFor="let stage of stages.controls; let i = index" [formGroupName]="i" class="array-item">
+          <h3>Stage {{ i + 1 }}</h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Intitulé *</label>
+              <input type="text" formControlName="intitule" class="form-control">
+            </div>
+            
+            <div class="form-group">
+              <label>Entreprise *</label>
+              <input type="text" formControlName="entreprise" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Date début *</label>
+              <input type="date" formControlName="dateDebut" class="form-control">
+            </div>
+            
+            <div class="form-group">
+              <label>Date fin *</label>
+              <input type="date" formControlName="dateFin" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Lieu</label>
+            <input type="text" formControlName="lieu" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea formControlName="description" class="form-control" rows="3"></textarea>
+          </div>
+
+          <button type="button" class="btn btn-danger" (click)="removeStage(i)">Supprimer</button>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-secondary" (click)="addStage()">+ Ajouter un stage</button>
+    </div>
+
+    <div class="form-step" *ngIf="currentStep === 5">
+      <h2>🌍 Langues</h2>
+      
+      <div formArrayName="langues">
+        <div *ngFor="let langue of langues.controls; let i = index" [formGroupName]="i" class="array-item">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Langue *</label>
+              <input type="text" formControlName="nom" class="form-control" placeholder="Français">
+            </div>
+            
+            <div class="form-group">
+              <label>Niveau *</label>
+              <select formControlName="niveau" class="form-control">
+                <option value="">Sélectionner</option>
+                <option value="Débutant">Débutant</option>
+                <option value="Intermédiaire">Intermédiaire</option>
+                <option value="Avancé">Avancé</option>
+                <option value="Courant">Courant</option>
+                <option value="Langue maternelle">Langue maternelle</option>
+              </select>
+            </div>
+            
+            <div class="form-group" style="flex: 0 0 auto;">
+              <label>&nbsp;</label>
+              <button type="button" class="btn btn-danger" (click)="removeLangue(i)">X</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-secondary" (click)="addLangue()">+ Ajouter une langue</button>
+    </div>
+
+    <div class="form-step" *ngIf="currentStep === 6">
+      <h2>🛠 Compétences</h2>
+      
+      <div formArrayName="competences">
+        <div *ngFor="let competence of competences.controls; let i = index" [formGroupName]="i" class="array-item">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Compétence *</label>
+              <input type="text" formControlName="nom" class="form-control" placeholder="Java">
+            </div>
+            
+            <div class="form-group">
+              <label>Niveau (1-5)</label>
+              <input type="number" formControlName="niveau" class="form-control" min="1" max="5">
+            </div>
+            
+            <div class="form-group">
+              <label>Catégorie</label>
+              <select formControlName="categorie" class="form-control">
+                <option value="">Sélectionner</option>
+                <option value="Technique">Technique</option>
+                <option value="Soft Skills">Soft Skills</option>
+                <option value="Logiciel">Logiciel</option>
+                <option value="Autre">Autre</option>
+              </select>
+            </div>
+            
+            <div class="form-group" style="flex: 0 0 auto;">
+              <label>&nbsp;</label>
+              <button type="button" class="btn btn-danger" (click)="removeCompetence(i)">X</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-secondary" (click)="addCompetence()">+ Ajouter une compétence</button>
+    </div>
+
+    <div class="form-navigation">
+      <button type="button" class="btn btn-secondary" (click)="previousStep()" [disabled]="currentStep === 1">
+        ← Précédent
+      </button>
+      
+      <button type="button" class="btn btn-primary" (click)="nextStep()" *ngIf="currentStep < totalSteps">
+        Suivant →
+      </button>
+      
+      <button type="submit" class="btn btn-success" *ngIf="currentStep === totalSteps">
+        ✓ Créer le CV
+      </button>
+    </div>
+  </form>
+</div>
