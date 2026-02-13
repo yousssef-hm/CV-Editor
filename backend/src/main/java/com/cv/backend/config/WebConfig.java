@@ -15,10 +15,9 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Chemin absolu pour éviter les problèmes
         String uploadsPath = Paths.get(uploadDir).toAbsolutePath().toUri().toString();
 
-        // IMPORTANT : /api/files/** pour correspondre au context-path
+        // ✅ Servir les fichiers via /api/files/**
         registry.addResourceHandler("/api/files/**")
                 .addResourceLocations(uploadsPath);
 

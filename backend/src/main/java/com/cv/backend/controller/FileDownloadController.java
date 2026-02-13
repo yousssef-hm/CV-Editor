@@ -12,14 +12,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @RestController
-@RequestMapping("/files")
+@RequestMapping("/files")  // ✅ /files pour télécharger
 @CrossOrigin(origins = "http://localhost:4200")
 public class FileDownloadController {
 
     @Value("${file.upload-dir}")
     private String uploadDir;
 
-    @GetMapping("/{fileName:.+}")
+    @GetMapping("/{fileName:.+}")  // ✅ Seulement GET
     public ResponseEntity<Resource> getFile(@PathVariable String fileName) {
         try {
             Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
@@ -28,13 +28,16 @@ public class FileDownloadController {
             if (resource.exists() && resource.isReadable()) {
                 String contentType = determineContentType(fileName);
 
+                System.out.println("✅ Serving file: " + fileName);
+                System.out.println("📁 From path: " + filePath.toAbsolutePath());
+
                 return ResponseEntity.ok()
                         .contentType(MediaType.parseMediaType(contentType))
                         .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
                         .header(HttpHeaders.CACHE_CONTROL, "max-age=3600")
                         .body(resource);
             } else {
-                System.err.println("❌ File not found or not readable: " + filePath);
+                System.err.println("❌ File not found: " + filePath.toAbsolutePath());
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception ex) {
