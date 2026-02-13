@@ -63,7 +63,6 @@ CV-EDITOR-PROJECT/
 - **Framework** : Spring Boot 3.2.0
 - **Langage** : Java 17+
 - **Base de données** : MySQL 8.0+
-- **ORM** : Spring Data JPA / Hibernate
 - **API** : RESTful avec JSON
 - **Upload de fichiers** : Spring MultipartFile
 - **Port** : 8080
@@ -73,7 +72,6 @@ CV-EDITOR-PROJECT/
 1. **Controller Layer** (Présentation)
    - `CVController` : Gestion des CVs
    - `UserController` : Gestion des utilisateurs
-   - `FileUploadController` : Upload de photos
    - `FileDownloadController` : Téléchargement de photos
 
 2. **Service Layer** (Logique métier)
@@ -108,7 +106,6 @@ CV-EDITOR-PROJECT/
 - **UI/UX** : CSS3 personnalisé avec gradients
 - **HTTP** : HttpClient avec RxJS
 - **Routing** : Angular Router
-- **Forms** : Reactive Forms (FormBuilder, FormArray)
 - **Port** : 4200
 
 **Composants principaux :**
