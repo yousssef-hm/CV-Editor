@@ -158,7 +158,6 @@ Avant de commencer, assurez-vous d'avoir installé :
 
 ```bash
 # Windows : Démarrer MySQL via XAMPP ou le service Windows
-
 # Linux/Mac
 sudo service mysql start
 ```
