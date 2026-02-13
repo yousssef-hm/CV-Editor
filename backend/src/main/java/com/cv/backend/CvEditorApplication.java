@@ -14,6 +14,7 @@ public class CvEditorApplication {
 		System.out.println("====================================");
 		System.out.println("CV Editor Backend Started!");
 		System.out.println("API disponible sur: http://localhost:8080/api");
+		System.out.println("Files disponibles sur: http://localhost:8080/api/files");
 		System.out.println("====================================");
 	}
 
@@ -26,8 +27,7 @@ public class CvEditorApplication {
 						.allowedOrigins("http://localhost:4200")
 						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 						.allowedHeaders("*")
-						.allowCredentials(true)
-						.exposedHeaders("*");
+						.allowCredentials(true);
 			}
 		};
 	}
